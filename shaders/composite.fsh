@@ -1,4 +1,3 @@
-// composite.fsh
 #version 120
 
 uniform sampler2D gcolor;        // scene color from gbuffers
