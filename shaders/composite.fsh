@@ -1,8 +1,8 @@
 #version 120
 
 uniform sampler2D gcolor;        // scene color from gbuffers
-uniform sampler2D gdepth;        // scene depth
-uniform sampler2D shadow;        // shadow map depth texture (bound via shaders.properties)
+uniform sampler2D depthtex0;     // scene depth
+uniform sampler2D shadow;        // shadow map depth texture
 
 uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferModelViewInverse;
@@ -13,7 +13,7 @@ varying vec2 texcoord;           // screen UV, passed from composite.vsh
 
 void main() {
     vec4 color = texture2D(gcolor, texcoord);
-    float depth = texture2D(gdepth, texcoord).r;
+    float depth = texture2D(depthtex0, texcoord).r;
 
 
     if (depth == 1.0) {
@@ -28,8 +28,8 @@ void main() {
 
     vec4 shadowViewPos = shadowModelView * worldPos;
     vec4 shadowClipPos = shadowProjection * shadowViewPos;
-    vec3 shadowUV = shadowNDC * 0.5 + 0.5;
     vec3 shadowNDC = shadowClipPos.xyz / shadowClipPos.w;
+    vec3 shadowUV = shadowNDC * 0.5 + 0.5;
 
     float bias = 0.005;
     float shadowDepth = texture2D(shadow, shadowUV.xy).r;
